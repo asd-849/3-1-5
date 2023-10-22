@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New user</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
+  <label for="name">Enter name: </label>
+  <input type="text" th:field="*{name}" id="name"/>
+  <br/>
+  <label for="lastName">Enter last name: </label>
+  <input type="text" th:field="*{lastName}" id="lastName"/>
+  <br/>
+  <label for="age">Enter age: </label>
+  <input type="text" th:field="*{age}" id="age"/>
+  <br/>
+  <label for="username">Enter username: </label>
+  <input type="text" th:field="*{username}" id="username"/>
+  <br/>
+  <label for="password">Enter password: </label>
+  <input type="text" th:field="*{password}" id="password"/>
+  <br/>
+  <div>
+    <p>
+      <label>Roles:
+        <input type="checkbox" name="roles"
+               th:each="role : ${rolesList}"
+               th:text="${role.getRoleName()}"
+               th:value="${role.getRoleName()}"
+               th:field="*{roles}"
+        />
+      </label>
+    </p>
+  </div>
+  <br/>
+  <input type="submit" value="Create"/>
+</form>
+<br />
+<form  th:action="@{/logout}" th:method="POST">
+  <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>

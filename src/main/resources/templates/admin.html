@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin panel</title>
+</head>
+<body>
+<table>
+  <tr>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Age</th>
+    <th>Role</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr th:each="user : ${adminUser}">
+    <td th:utext="${user.getName()}">name</td>
+    <td th:utext="${user.getLastName()}">lastname</td>
+    <td th:utext="${user.getAge()}">age</td>
+    <td th:utext="${user.getAuthorities()}">role</td>
+    <td><a th:href="@{/admin/edit(id=${user.getId()})}">update</a></td>
+    <td><a th:href="@{/admin/delete(id=${user.getId()})}">delete</a></td>
+  </tr>
+</table>
+<br/>
+<a href="/admin/new">Create new user</a>
+<br />
+<!--<a href="@{/logout}">Logout</a>-->
+<form  th:action="@{/logout}" th:method="POST">
+  <input type="submit" value="Logout"/>
+</form>
+</body>
+</html>
