@@ -12,8 +12,8 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private UserService userService;
-    private RoleService roleService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
@@ -21,12 +21,15 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping
-    public String index(ModelMap model) {
+    @GetMapping()
+    public String index() {
+        return "index";
+    }
+    @GetMapping("admin")
+    public String adminPage(ModelMap model) {
         model.addAttribute("adminUser", userService.getAllUsers());
         return "admin";
     }
-
     @GetMapping("/new")
     public String newUser(Model model, Model role) {
         model.addAttribute("user", new User());
@@ -37,7 +40,7 @@ public class AdminController {
     @PostMapping("/new")
     public String createUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
-        return "redirect:/admin";
+        return "redirect:/admin/admin";
     }
 
     @GetMapping("/edit")
@@ -53,12 +56,12 @@ public class AdminController {
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute("user") User user, @RequestParam Long id) {
         userService.updateUserById(id, user);
-        return "redirect:/admin";
+        return "redirect:/admin/admin";
     }
 
     @GetMapping("/delete")
     public String deleteUser(@RequestParam Long id) {
         userService.removeUserById(id);
-        return "redirect:/admin";
+        return "redirect:/admin/admin";
     }
 }

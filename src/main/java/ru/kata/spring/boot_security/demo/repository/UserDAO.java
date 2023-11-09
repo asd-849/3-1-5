@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserDAO {
-    //    @Query("select u from User u join fetch u.roles where u.username = :username")
-//    User findByUsername(String username);
     void deleteById(Long id);
     List<User> findAll();
     void save(User user);
