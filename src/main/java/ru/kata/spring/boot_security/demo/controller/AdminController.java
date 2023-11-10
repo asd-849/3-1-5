@@ -22,16 +22,16 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String index() {
+    public String welcome() {
         return "index";
     }
     @GetMapping("admin")
-    public String adminPage(ModelMap model) {
+    public String showUsers(ModelMap model) {
         model.addAttribute("adminUser", userService.getAllUsers());
         return "admin";
     }
     @GetMapping("/new")
-    public String newUser(Model model, Model role) {
+    public String addUser(Model model, Model role) {
         model.addAttribute("user", new User());
         role.addAttribute("rolesList", roleService.getAllRoles());
         return "new";
@@ -45,7 +45,6 @@ public class AdminController {
 
     @GetMapping("/edit")
     public String editUser(Model model, @RequestParam Long id, Model role) {
-//        model.addAttribute("user", userService.getUser(id));
         role.addAttribute("rolesList", roleService.getAllRoles());
         var user = userService.getUser(id);
         user.setPassword(null);

@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.repository;
+package ru.kata.spring.boot_security.demo.DAO;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
@@ -13,4 +13,5 @@ public interface UserDAO {
     void save(User user);
     User findById(Long id);
     User findByUsername(String username);
+    void update(User user);
 }

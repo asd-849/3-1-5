@@ -1,23 +1,19 @@
-package ru.kata.spring.boot_security.demo.repository;
+package ru.kata.spring.boot_security.demo.DAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Set;
 
 @Repository
+@Transactional
 public class UserDAOImpl implements UserDAO {
     @PersistenceContext
-    private final EntityManager entityManager;
-    @Autowired
-    public UserDAOImpl (EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private EntityManager entityManager;
 
     @Override
     public void deleteById(Long id) {
@@ -51,5 +47,10 @@ public class UserDAOImpl implements UserDAO {
                 .createQuery(query, User.class)
                 .setParameter("username", username)
                 .getSingleResult();
+    }
+
+    @Override
+    public void update(User user) {
+        entityManager.merge(user);
     }
 }
