@@ -1,11 +1,14 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.*;
 import java.util.Objects;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "users")
@@ -25,12 +28,11 @@ public class User implements UserDetails {
     @Column(name = "age")
     private Byte age;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @Column(name = "roles")
-    private List<Role> roles;
+    private List<Role> roles = new LinkedList<>();
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
@@ -43,13 +45,14 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String username, String password, String name, String lastName, Byte age) {
+    public User(Long id, String username, String password, String name, String lastName, Byte age, List<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -66,21 +69,25 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
@@ -90,6 +97,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }

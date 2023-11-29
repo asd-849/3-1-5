@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.persister.walking.internal.FetchStrategyHelper;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -16,7 +18,8 @@ public class Role implements GrantedAuthority {
     @Column(name = "roleName", unique = true)
     private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     private List<User> users;
 
     public Role() {
@@ -27,6 +30,7 @@ public class Role implements GrantedAuthority {
     }
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return getRoleName();
     }
