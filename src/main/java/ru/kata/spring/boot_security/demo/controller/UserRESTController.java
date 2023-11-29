@@ -15,12 +15,10 @@ import java.security.Principal;
 @RequestMapping("/api")
 public class UserRESTController {
     private final UserService userService;
-    private final RoleService roleService;
 
     @Autowired
-    public UserRESTController(UserService userService, RoleService roleService) {
+    public UserRESTController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     @GetMapping("/user")

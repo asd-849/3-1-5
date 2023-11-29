@@ -15,16 +15,14 @@ import ru.kata.spring.boot_security.demo.dao.UserDAO;
 import java.util.*;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private UserDAO userRepository;
-    private RoleService roleService;
     private PasswordEncoder encoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userRepository, RoleService roleService, @Lazy PasswordEncoder encoder) {
+    public UserServiceImpl(UserDAO userRepository, @Lazy PasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
         this.encoder = encoder;
     }
 
@@ -41,7 +39,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void saveUser(User user) {
         user.setPassword(encoder.encode((user.getPassword())));
-        userRepository.save(setUserRoles(user));
+        userRepository.save(user);
     }
 
     @Transactional
@@ -59,7 +57,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void updateUserById(Long id, User user) {
         user.setPassword(encoder.encode((user.getPassword())));
-        userRepository.update(setUserRoles(user));
+        userRepository.update(user);
     }
 
     @Override
@@ -70,21 +68,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserByName(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    private User setUserRoles(User user) {
-        var roles = user.getRoles();
-        var roleList = roleService.getAllRoles();
-        var set = new ArrayList<Role>();
-        for (Role role : roleList) {
-            for (Role userRole : roles) {
-                if (role.getRoleName().equals(userRole.getRoleName())) {
-                    set.add(role);
-                }
-            }
-        }
-        user.setRoles(set);
-        return user;
     }
 
 }
